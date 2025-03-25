@@ -380,6 +380,12 @@ class LivechatClass {
 			return false;
 		}
 
+		// update inquiry's last message with room's last message to correctly display in the queue
+		// because we stop updating the inquiry when it's been taken
+		if (room.lastMessage) {
+			await LivechatInquiry.setLastMessageById(inquiry._id, room.lastMessage);
+		}
+
 		const transferredBy = normalizeTransferredByData(user, room);
 		this.logger.debug(`Transfering room ${room._id} by user ${transferredBy._id}`);
 		const transferData = { roomId: room._id, scope: 'queue', departmentId, transferredBy, ...overrideTransferData };
